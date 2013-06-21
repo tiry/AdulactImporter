@@ -15,9 +15,12 @@ import org.dom4j.Node;
 import org.dom4j.Text;
 import org.dom4j.io.SAXReader;
 import org.mvel2.MVEL;
+import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.core.api.impl.blob.StringBlob;
 import org.nuxeo.ecm.core.api.model.Property;
+import org.nuxeo.ecm.core.api.model.impl.primitives.BlobProperty;
 import org.nuxeo.ecm.core.schema.types.ListType;
 
 public class DepotParser {
@@ -89,6 +92,23 @@ public class DepotParser {
         return propValue;
     }
 
+    protected Blob resolveBlob(Element el, AttributeConfig conf) {
+
+        Map<String, Object> propValues = (Map<String, Object>) resolveComplex(el, conf);
+
+        if (propValues.containsKey("content")) {
+            StringBlob blob = new StringBlob((String) propValues.get("content"));
+            if (propValues.containsKey("mimetype")) {
+                blob.setMimeType((String) propValues.get("mimetype"));
+            }
+            if (propValues.containsKey("filename")) {
+                blob.setFilename((String) propValues.get("filename"));
+            }
+            return blob;
+        }
+        return null;
+    }
+
     protected void processDocAttributes(DocumentModel doc, Element el,
             AttributeConfig conf) throws Exception {
 
@@ -101,7 +121,13 @@ public class DepotParser {
 
         } else if (property.isComplex()) {
 
-            property.setValue(resolveComplex(el, conf));
+            if (property instanceof BlobProperty) {
+                property.setValue(resolveBlob(el, conf));
+            } else {
+                property.setValue(resolveComplex(el, conf));
+            }
+
+
 
         } else if (property.isList()) {
 

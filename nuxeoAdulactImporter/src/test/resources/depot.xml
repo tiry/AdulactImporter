@@ -5,6 +5,7 @@
     <typeSeance>Conseil Général</typeSeance>
     <dateSeance>2013-02-07 14:00:00</dateSeance>
     <dateConvocation>2012-11-30 18:16:01</dateConvocation>
+    <!--
     <document nom="convocation.pdf" type="convocation">
       <mimetype>application/pdf</mimetype>
       <encoding>utf-8</encoding>
@@ -21,6 +22,7 @@
       <mimetype>application/pdf</mimetype>
       <encoding>utf-8</encoding>
     </document>
+     -->
   </seance>
   <dossierActe idActe="38" refSeance="12">
     <titre>Changement des horaires d'ouverture de la mairie</titre>
