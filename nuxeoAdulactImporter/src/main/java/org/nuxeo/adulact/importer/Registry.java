@@ -30,8 +30,6 @@ public class Registry {
 
             attConfig.add(new AttributeConfig("document", "file:content", complex, null));
 
-            //attConfig.add(new )
-
         }
 
         return attConfig;
@@ -41,7 +39,20 @@ public class Registry {
         if (docConfig == null) {
             docConfig = new ArrayList<DocConfig>();
             docConfig.add(new DocConfig("seance", "Workspace", null, "@idSeance")); // pure xpath
-            docConfig.add(new DocConfig("dossierActe", "Folder", "../seance", "Acte-{{@idActe}}")); // xpath resolution inside String
+
+            String findParent = "#{" +
+                    "nodes = currentElement.selectNodes('@refSeance');" +
+                    "if (nodes.size()>0) {" +
+                    "  String seanceRef = nodes.get(0).getText();" +
+                    "  String parentRef = '//seance[@idSeance=\"' + seanceRef + '\"]';" +
+                    "  return xml.selectNodes(parentRef).get(0);" +
+                    " } else {" +
+                    "  return root.getPathAsString();" +
+                    " }" +
+                    "}";
+
+            // xpath resolution inside String + complex MVEL Parent resolution
+            docConfig.add(new DocConfig("dossierActe", "Folder", findParent, "Acte-{{@idActe}}"));
             docConfig.add(new DocConfig("document", "File", "..", "@nom"));
         }
         return docConfig;
