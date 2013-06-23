@@ -1,13 +1,21 @@
 package org.nuxeo.adulact.importer;
 
+import org.nuxeo.common.xmap.annotation.XNode;
+import org.nuxeo.common.xmap.annotation.XObject;
+
+@XObject("docConfig")
 public class DocConfig {
 
+    @XNode("@tagName")
     protected String tagName;
 
+    @XNode("docType")
     protected String docType;
 
+    @XNode("parent")
     protected String parent;
 
+    @XNode("name")
     protected String name;
 
     public DocConfig() {}

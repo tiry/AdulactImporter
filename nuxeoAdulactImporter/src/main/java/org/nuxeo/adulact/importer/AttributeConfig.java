@@ -3,18 +3,28 @@ package org.nuxeo.adulact.importer;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.nuxeo.common.xmap.annotation.XNode;
+import org.nuxeo.common.xmap.annotation.XNodeMap;
+import org.nuxeo.common.xmap.annotation.XObject;
+
+@XObject("attributeConfig")
 public class AttributeConfig {
 
+    @XNode("@tagName")
     protected String tagName;
 
+    @XNode("@docProperty")
     protected String targetDocProperty;
 
     // xpath to select when this config may be valid
+    @XNode("@filter")
     protected String filter;
 
     // mapping between Nuxeo property names and corresponding xpath to extract values
+    @XNodeMap(value = "mapping", key = "@documentProperty", type = HashMap.class, componentType = String.class)
     protected Map<String,String> mapping;
 
+    @XNode("@xmlPath")
     protected String xmlPath;
 
     public AttributeConfig() {}

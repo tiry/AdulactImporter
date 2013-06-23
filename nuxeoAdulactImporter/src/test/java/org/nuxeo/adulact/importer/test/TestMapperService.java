@@ -6,24 +6,30 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.nuxeo.adulact.importer.ImporterServiceImpl;
+import org.nuxeo.adulact.importer.XmlImporterSevice;
 import org.nuxeo.common.utils.FileUtils;
 import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.blobholder.BlobHolder;
 import org.nuxeo.ecm.core.test.CoreFeature;
+import org.nuxeo.runtime.api.Framework;
+import org.nuxeo.runtime.test.runner.Deploy;
 import org.nuxeo.runtime.test.runner.Features;
 import org.nuxeo.runtime.test.runner.FeaturesRunner;
 
 import com.google.inject.Inject;
 
+@Deploy("org.nuxeo.adulact.importer")
 @RunWith(FeaturesRunner.class)
 @Features(CoreFeature.class)
-public class TestMapper {
+public class TestMapperService {
 
     @Inject
     CoreSession session;
+
+    @Inject
+    XmlImporterSevice importerService;
 
     @Test
     public void test() throws Exception {
@@ -33,9 +39,9 @@ public class TestMapper {
 
         DocumentModel root = session.getRootDocument();
 
-        ImporterServiceImpl parser = new ImporterServiceImpl(root, new DummyRegistry());
-
-        parser.parse(xml);
+        XmlImporterSevice importer = Framework.getLocalService(XmlImporterSevice.class);
+        Assert.assertNotNull(importer);
+        importer.importDocuments(root, xml);
 
         session.save();
 

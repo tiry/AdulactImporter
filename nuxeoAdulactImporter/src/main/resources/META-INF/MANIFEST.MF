@@ -1,9 +1,12 @@
+Manifest-Version: 1.0
+Bundle-Vendor: Nuxeo
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .
-Manifest-Version: 1.0
-Bundle-Name: nuxeoAdulactImporter
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Bundle-Vendor: Nuxeo
 Bundle-Version: 5.7-I20130506_1515
+Bundle-Name: org.nuxeo.adulact.importer
+Nuxeo-Component: OSGI-INF/ImporterMapping-service.xml,
+ OSGI-INF/ImporterMapping-adulact-contrib.xml
 Bundle-ManifestVersion: 2
-Bundle-SymbolicName: nuxeoAdulactImporter
+Bundle-SymbolicName: org.nuxeo.adulact.importer
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+
