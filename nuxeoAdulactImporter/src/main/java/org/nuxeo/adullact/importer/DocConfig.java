@@ -44,6 +44,11 @@ public class DocConfig {
     }
 
 
+    @Override
+    public String toString() {
+        String msg = "\nDocConfig:\n\tTag Name: %s\n\tDocType %s\n\tParent: %s\n\tName: %s\n";
+        return String.format(msg, tagName, docType, parent, name);
+    }
 
 
 

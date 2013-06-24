@@ -28,6 +28,13 @@ import org.nuxeo.ecm.core.schema.types.ListType;
 
 public class ImporterServiceImpl {
 
+    private static final String MSG_NO_ELEMENT_FOUND = "**CREATION**\nNo element \"%s\" found in %s, use the DOC_TYPE-INDEX value";
+
+    private static final String MSG_CREATION = "**CREATION**\nTry to create document in %s with name %s based on \"%s\" fragment "
+            + "with the following conf: %s\n";
+
+    private static final String MSG_UPDATE_PROPERTY = "**PROPERTY UPDATE**\nValue found for %s in %s is \"%s\". With the following conf: %s";
+
     public static final Log log = LogFactory.getLog(ImporterServiceImpl.class);
 
     protected CoreSession session;
@@ -125,15 +132,31 @@ public class ImporterServiceImpl {
         Property property = doc.getProperty(targetDocProperty);
 
         if (property.isScalar()) {
-
-            property.setValue(resolveAndEvaluateXmlNode(el, conf.getSingleXpath()));
+            Object value = resolveAndEvaluateXmlNode(el, conf.getSingleXpath());
+            if (log.isDebugEnabled()) {
+                log.debug(String.format(MSG_UPDATE_PROPERTY, targetDocProperty,
+                        el.getUniquePath(), value, conf.toString()));
+            }
+            property.setValue(value);
 
         } else if (property.isComplex()) {
 
             if (property instanceof BlobProperty) {
-                property.setValue(resolveBlob(el, conf));
+                Object value = resolveBlob(el, conf);
+                if (log.isDebugEnabled()) {
+                    log.debug(String.format(MSG_UPDATE_PROPERTY,
+                            targetDocProperty, el.getUniquePath(),
+                            value, conf.toString()));
+                }
+                property.setValue(value);
             } else {
-                property.setValue(resolveComplex(el, conf));
+                Object value = resolveComplex(el, conf);
+                if (log.isDebugEnabled()) {
+                    log.debug(String.format(MSG_UPDATE_PROPERTY,
+                            targetDocProperty, el.getUniquePath(),
+                            value, conf.toString()));
+                }
+                property.setValue(value);
             }
 
 
@@ -144,15 +167,31 @@ public class ImporterServiceImpl {
             @SuppressWarnings("unchecked")
             List<Serializable> values = (List<Serializable>) property.getValue();
             if (values == null) {
+                if (log.isDebugEnabled()) {
+                    log.debug(String.format(MSG_UPDATE_PROPERTY,
+                            targetDocProperty, el.getUniquePath(),
+                            "%NO_VALUE%", conf.toString()));
+                }
                 values = new ArrayList<Serializable>();
             }
             if (lType.getFieldType().isSimpleType()) {
-
-                values.add((Serializable) resolveAndEvaluateXmlNode(el, conf.getSingleXpath()));
+                Serializable value = (Serializable) resolveAndEvaluateXmlNode(
+                        el, conf.getSingleXpath());
+                if (log.isDebugEnabled()) {
+                    log.debug(String.format(MSG_UPDATE_PROPERTY,
+                            targetDocProperty, el.getUniquePath(),
+                            value, conf.toString()));
+                }
+                values.add(value);
 
             } else {
-
-                values.add((Serializable) resolveComplex(el, conf));
+                Serializable value = (Serializable) resolveComplex(el, conf);
+                if (log.isDebugEnabled()) {
+                    log.debug(String.format(MSG_UPDATE_PROPERTY,
+                            targetDocProperty, el.getUniquePath(),
+                            value, conf.toString()));
+                }
+                values.add(value);
 
             }
         }
@@ -177,7 +216,6 @@ public class ImporterServiceImpl {
             int idx = xpr.indexOf("{{");
             while (idx >= 0) {
                 int idx2 = xpr.indexOf("}}", idx);
-                String path =null;
                 if (idx2 > 0) {
                     sb.append(xpr.substring(0, idx));
                     String xpath = xpr.substring(idx + 2, idx2);
@@ -290,6 +328,10 @@ public class ImporterServiceImpl {
         Object nameOb = resolveName(el, conf.getName());
         String name = null;
         if (nameOb == null) {
+            if (log.isDebugEnabled()) {
+                log.debug(String.format(MSG_NO_ELEMENT_FOUND, conf.getName(),
+                        el.getUniquePath()));
+            }
             int idx = 1;
             for (int i = 0; i < docsStack.size(); i++) {
                 if (docsStack.get(i).getType().equals(conf.getDocType())) {
@@ -301,7 +343,18 @@ public class ImporterServiceImpl {
             name = nameOb.toString();
         }
         doc.setPathInfo(path, name);
-        doc = session.createDocument(doc);
+
+        if (log.isDebugEnabled()) {
+            log.debug(String.format(MSG_CREATION, path, name,
+                    el.getUniquePath(), conf.toString()));
+        }
+
+        try {
+            doc = session.createDocument(doc);
+        } catch (Exception e) {
+            throw new Exception(String.format(MSG_CREATION, path, name,
+                    el.getUniquePath(), conf.toString()), e);
+        }
         docsStack.push(doc);
         elToDoc.put(el, doc);
     }
