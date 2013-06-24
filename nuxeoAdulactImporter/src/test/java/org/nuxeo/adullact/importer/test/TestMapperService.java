@@ -63,7 +63,7 @@ public class TestMapperService {
         Assert.assertEquals("we should have 3 actes in the seance",3, docs.size());
 
         docs = session.query("select * from Document where ecm:primaryType='Folder'  AND ecm:parentId!='" + seanceDoc.getId() + "'");
-        Assert.assertEquals("we should have only 1 actes ouside of the seance",1, docs.size());
+        Assert.assertEquals("we should have only 1 actes outside of the seance",1, docs.size());
 
         docs = session.query("select * from Document where ecm:primaryType='File'  AND ecm:parentId='" + seanceDoc.getId() + "'");
         Assert.assertEquals("we should have only 4 files in the seance",4, docs.size());

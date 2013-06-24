@@ -20,31 +20,35 @@ public class AttributeConfig {
     @XNode("@filter")
     protected String filter;
 
-    // mapping between Nuxeo property names and corresponding xpath to extract values
+    // mapping between Nuxeo property names and corresponding xpath to extract
+    // values
     @XNodeMap(value = "mapping", key = "@documentProperty", type = HashMap.class, componentType = String.class)
-    protected Map<String,String> mapping;
+    protected Map<String, String> mapping;
 
     @XNode("@xmlPath")
     protected String xmlPath;
 
-    public AttributeConfig() {}
+    public AttributeConfig() {
+    }
 
-    public AttributeConfig(String tagName,String targetDocProperty, Map<String,String> mapping, String filter ) {
+    public AttributeConfig(String tagName, String targetDocProperty,
+            Map<String, String> mapping, String filter) {
         this.tagName = tagName;
         this.targetDocProperty = targetDocProperty;
-        if (mapping==null) {
+        if (mapping == null) {
             mapping = new HashMap<String, String>();
         } else {
             this.mapping = mapping;
         }
-        this.filter=filter;
+        this.filter = filter;
     }
 
-    public AttributeConfig(String tagName,String targetDocProperty, String xmlPath, String filter ) {
+    public AttributeConfig(String tagName, String targetDocProperty,
+            String xmlPath, String filter) {
         this.tagName = tagName;
         this.targetDocProperty = targetDocProperty;
         this.xmlPath = xmlPath;
-        this.filter=filter;
+        this.filter = filter;
     }
 
     public String getTagName() {
@@ -64,10 +68,10 @@ public class AttributeConfig {
     }
 
     public String getSingleXpath() {
-        if (xmlPath!=null) {
+        if (xmlPath != null) {
             return xmlPath;
         }
-        if (mapping!=null) {
+        if (mapping != null) {
             return mapping.values().iterator().next();
         }
         return null;

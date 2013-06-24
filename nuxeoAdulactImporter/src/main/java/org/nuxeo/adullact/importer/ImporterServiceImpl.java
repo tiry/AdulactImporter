@@ -42,7 +42,8 @@ public class ImporterServiceImpl {
 
     protected ParserConfigRegistry registry;
 
-    public ImporterServiceImpl(DocumentModel rootDoc, ParserConfigRegistry registry) {
+    public ImporterServiceImpl(DocumentModel rootDoc,
+            ParserConfigRegistry registry) {
         session = rootDoc.getCoreSession();
         this.rootDoc = rootDoc;
         docsStack = new Stack<DocumentModel>();
@@ -92,14 +93,17 @@ public class ImporterServiceImpl {
 
         Map<String, Object> propValue = new HashMap<String, Object>();
         for (String name : conf.getMapping().keySet()) {
-            propValue.put(name, resolveAndEvaluateXmlNode(el, conf.getMapping().get(name)));
+            propValue.put(name,
+                    resolveAndEvaluateXmlNode(el, conf.getMapping().get(name)));
         }
         return propValue;
     }
 
     protected Blob resolveBlob(Element el, AttributeConfig conf) {
 
-        Map<String, Object> propValues = (Map<String, Object>) resolveComplex(el, conf);
+        @SuppressWarnings("unchecked")
+        Map<String, Object> propValues = (Map<String, Object>) resolveComplex(
+                el, conf);
 
         if (propValues.containsKey("content")) {
             StringBlob blob = new StringBlob((String) propValues.get("content"));
@@ -137,6 +141,7 @@ public class ImporterServiceImpl {
         } else if (property.isList()) {
 
             ListType lType = (ListType) property.getType();
+            @SuppressWarnings("unchecked")
             List<Serializable> values = (List<Serializable>) property.getValue();
             if (values == null) {
                 values = new ArrayList<Serializable>();
@@ -160,7 +165,7 @@ public class ImporterServiceImpl {
     }
 
     protected Object resolve(Element el, String xpr) {
-        if (xpr==null) {
+        if (xpr == null) {
             return null;
         }
 
@@ -169,20 +174,20 @@ public class ImporterServiceImpl {
             return resolveMVEL(el, xpr);
         } else if (xpr.contains("{{")) { // String containing XPaths
             StringBuffer sb = new StringBuffer();
-            int idx =  xpr.indexOf("{{");
-            while (idx >=0) {
+            int idx = xpr.indexOf("{{");
+            while (idx >= 0) {
                 int idx2 = xpr.indexOf("}}", idx);
                 String path =null;
                 if (idx2 > 0) {
                     sb.append(xpr.substring(0, idx));
-                    String xpath = xpr.substring(idx+2, idx2);
+                    String xpath = xpr.substring(idx + 2, idx2);
                     sb.append(resolveAndEvaluateXmlNode(el, xpath));
                     xpr = xpr.substring(idx2);
                 } else {
                     sb.append(xpr);
-                    xpr ="";
+                    xpr = "";
                 }
-                idx =  xpr.indexOf("{{");
+                idx = xpr.indexOf("{{");
             }
             return sb.toString();
         } else {
@@ -191,13 +196,15 @@ public class ImporterServiceImpl {
     }
 
     protected Object resolveMVEL(Element el, String xpr) {
-        Map<String, Object> ctx = new HashMap<String, Object>(getMVELContext(el));
+        Map<String, Object> ctx = new HashMap<String, Object>(
+                getMVELContext(el));
         Serializable compiled = MVEL.compileExpression(xpr);
         return MVEL.executeExpression(compiled, ctx);
     }
 
     protected Object resolveXP(Element el, String xpr) {
 
+        @SuppressWarnings("unchecked")
         List<Object> nodes = el.selectNodes(xpr);
         if (nodes.size() == 1) {
             return nodes.get(0);
@@ -256,8 +263,8 @@ public class ImporterServiceImpl {
     }
 
     protected String resolveName(Element el, String xpr) {
-        Object ob = resolveAndEvaluateXmlNode(el,xpr);
-        if (ob==null) {
+        Object ob = resolveAndEvaluateXmlNode(el, xpr);
+        if (ob == null) {
             return null;
         }
         return ob.toString();
@@ -265,11 +272,11 @@ public class ImporterServiceImpl {
 
     protected Object resolveAndEvaluateXmlNode(Element el, String xpr) {
         Object ob = resolve(el, xpr);
-        if (ob==null) {
+        if (ob == null) {
             return null;
         }
         if (ob instanceof Node) {
-            return ((Node)ob).getText();
+            return ((Node) ob).getText();
         } else {
             return ob;
         }
@@ -296,7 +303,7 @@ public class ImporterServiceImpl {
         doc.setPathInfo(path, name);
         doc = session.createDocument(doc);
         docsStack.push(doc);
-        elToDoc.put(el,  doc);
+        elToDoc.put(el, doc);
     }
 
     protected void process(Element el) throws Exception {
