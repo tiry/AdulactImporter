@@ -6,9 +6,9 @@
     <artifactId>nuxeo-features-parent</artifactId>
     <version>5.7-SNAPSHOT</version>
   </parent>
-  <groupId>org.nuxeo.adulact</groupId>
-  <artifactId>nuxeoAdulactImporter</artifactId>
-  <name>nuxeoAdulactImporter</name>
+  <groupId>org.nuxeo.adullact</groupId>
+  <artifactId>nuxeoAdullactImporter</artifactId>
+  <name>nuxeoAdullactImporter</name>
   <description/>
   <dependencies>
     <dependency>

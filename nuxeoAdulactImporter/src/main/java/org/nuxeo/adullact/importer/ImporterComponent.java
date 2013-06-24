@@ -15,7 +15,7 @@
  *     <a href="mailto:tdelprat@nuxeo.com">Tiry</a>
  */
 
-package org.nuxeo.adulact.importer;
+package org.nuxeo.adullact.importer;
 
 import java.io.File;
 import java.util.ArrayList;

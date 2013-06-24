@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
-<component name="org.nuxeo.adulact.importer.ImporterComponent" version="1.0">
+<component name="org.nuxeo.adullact.importer.ImporterComponent" version="1.0">
 
-  <implementation class="org.nuxeo.adulact.importer.ImporterComponent" />
+  <implementation class="org.nuxeo.adullact.importer.ImporterComponent" />
   <service>
-      <provide interface="org.nuxeo.adulact.importer.XmlImporterSevice" />
+      <provide interface="org.nuxeo.adullact.importer.XmlImporterSevice" />
   </service>
 
   <extension-point name="documentMapping">
@@ -37,7 +37,7 @@
 
       @author Thierry Delprat (td@nuxeo.com)
     </documentation>
-    <object class="org.nuxeo.adulact.importer.DocConfig" />
+    <object class="org.nuxeo.adullact.importer.DocConfig" />
   </extension-point>
 
   <extension-point name="attributeMapping">
@@ -73,7 +73,7 @@
 
       @author Thierry Delprat (td@nuxeo.com)
     </documentation>
-    <object class="org.nuxeo.adulact.importer.AttributeConfig" />
+    <object class="org.nuxeo.adullact.importer.AttributeConfig" />
   </extension-point>
 
 </component>

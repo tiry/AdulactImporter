@@ -1,4 +1,4 @@
-package org.nuxeo.adulact.importer;
+package org.nuxeo.adullact.importer;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-<component name="org.nuxeo.adulact.importer.ImporterComponent.adulact.contrib" version="1.0">
+<component name="org.nuxeo.adullact.importer.ImporterComponent.adullact.contrib" version="1.0">
 
- <extension target="org.nuxeo.adulact.importer.ImporterComponent"
+ <extension target="org.nuxeo.adullact.importer.ImporterComponent"
     point="documentMapping">
 
   <docConfig tagName="seance">
@@ -31,7 +31,7 @@
 
  </extension>
 
- <extension target="org.nuxeo.adulact.importer.ImporterComponent"
+ <extension target="org.nuxeo.adullact.importer.ImporterComponent"
     point="attributeMapping">
 
   <attributeConfig tagName="titre" docProperty="dc:title" xmlPath="text()"/>

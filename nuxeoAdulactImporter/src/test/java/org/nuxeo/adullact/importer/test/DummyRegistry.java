@@ -1,13 +1,13 @@
-package org.nuxeo.adulact.importer.test;
+package org.nuxeo.adullact.importer.test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.nuxeo.adulact.importer.AttributeConfig;
-import org.nuxeo.adulact.importer.DocConfig;
-import org.nuxeo.adulact.importer.ParserConfigRegistry;
+import org.nuxeo.adullact.importer.AttributeConfig;
+import org.nuxeo.adullact.importer.DocConfig;
+import org.nuxeo.adullact.importer.ParserConfigRegistry;
 
 public class DummyRegistry implements ParserConfigRegistry {
 

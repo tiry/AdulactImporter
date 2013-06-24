@@ -1,4 +1,4 @@
-package org.nuxeo.adulact.importer;
+package org.nuxeo.adullact.importer;
 
 import org.nuxeo.common.xmap.annotation.XNode;
 import org.nuxeo.common.xmap.annotation.XObject;
