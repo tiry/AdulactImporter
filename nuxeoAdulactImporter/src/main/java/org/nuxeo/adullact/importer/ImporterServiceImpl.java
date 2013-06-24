@@ -8,12 +8,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.Node;
 import org.dom4j.Text;
 import org.dom4j.io.SAXReader;
+import org.dom4j.tree.DefaultText;
 import org.mvel2.MVEL;
 import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.CoreSession;
@@ -24,6 +27,8 @@ import org.nuxeo.ecm.core.api.model.impl.primitives.BlobProperty;
 import org.nuxeo.ecm.core.schema.types.ListType;
 
 public class ImporterServiceImpl {
+
+    public static final Log log = LogFactory.getLog(ImporterServiceImpl.class);
 
     protected CoreSession session;
 
@@ -38,7 +43,7 @@ public class ImporterServiceImpl {
     protected ParserConfigRegistry registry;
 
     public ImporterServiceImpl(DocumentModel rootDoc, ParserConfigRegistry registry) {
-        this.session = rootDoc.getCoreSession();
+        session = rootDoc.getCoreSession();
         this.rootDoc = rootDoc;
         docsStack = new Stack<DocumentModel>();
         docsStack.add(rootDoc);
@@ -197,6 +202,19 @@ public class ImporterServiceImpl {
         if (nodes.size() == 1) {
             return nodes.get(0);
         } else if (nodes.size() > 1) {
+            // NXP-11834
+            if (xpr.endsWith("text()")) {
+                String value = "";
+                for (Object node : nodes) {
+                    if (!(node instanceof DefaultText)) {
+                        String msg = "Text selector must return a string (expr:\"%s\") element %s";
+                        log.error(String.format(msg, xpr, el.getStringValue()));
+                        return value;
+                    }
+                    value += ((DefaultText) node).getText();
+                }
+                return new DefaultText(value);
+            }
             return nodes;
         }
         return null;
@@ -247,6 +265,7 @@ public class ImporterServiceImpl {
 
     protected Object resolveAndEvaluateXmlNode(Element el, String xpr) {
         Object ob = resolve(el, xpr);
+        System.out.println("Test");
         if (ob==null) {
             return null;
         }
