@@ -17,12 +17,14 @@ import org.nuxeo.runtime.api.Framework;
 import org.nuxeo.runtime.test.runner.Deploy;
 import org.nuxeo.runtime.test.runner.Features;
 import org.nuxeo.runtime.test.runner.FeaturesRunner;
+import org.nuxeo.runtime.test.runner.LocalDeploy;
 
 import com.google.inject.Inject;
 
-@Deploy("org.nuxeo.adullact.importer")
 @RunWith(FeaturesRunner.class)
 @Features(CoreFeature.class)
+@Deploy("org.nuxeo.adullact.importer")
+@LocalDeploy("org.nuxeo.adullact.importer:test-ImporterMapping-contrib.xml")
 public class TestMapperService {
 
     @Inject
