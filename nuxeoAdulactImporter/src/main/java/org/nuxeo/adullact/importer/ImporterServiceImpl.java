@@ -202,7 +202,7 @@ public class ImporterServiceImpl {
         if (nodes.size() == 1) {
             return nodes.get(0);
         } else if (nodes.size() > 1) {
-            // NXP-11834
+            // Workaround for NXP-11834
             if (xpr.endsWith("text()")) {
                 String value = "";
                 for (Object node : nodes) {
@@ -265,7 +265,6 @@ public class ImporterServiceImpl {
 
     protected Object resolveAndEvaluateXmlNode(Element el, String xpr) {
         Object ob = resolve(el, xpr);
-        System.out.println("Test");
         if (ob==null) {
             return null;
         }
