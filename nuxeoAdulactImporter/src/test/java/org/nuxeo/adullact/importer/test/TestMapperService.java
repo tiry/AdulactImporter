@@ -1,5 +1,7 @@
 package org.nuxeo.adullact.importer.test;
 
+import static org.junit.Assert.*;
+
 import java.io.File;
 import java.util.List;
 
@@ -78,6 +80,25 @@ public class TestMapperService {
                     }
                 }
             }
+        }
+    }
+
+
+    @Test
+    public void testNXP11834() throws Exception {
+
+        File xml = FileUtils.getResourceFileFromContext("NXP-11834.xml");
+        Assert.assertNotNull(xml);
+
+        DocumentModel root = session.getRootDocument();
+
+        XmlImporterSevice importer = Framework.getLocalService(XmlImporterSevice.class);
+        Assert.assertNotNull(importer);
+        try {
+            importer.importDocuments(root, xml);
+        } catch (ClassCastException e) {
+            fail("See NXP-11834 ticket");
+
         }
     }
 
