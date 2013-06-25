@@ -19,14 +19,22 @@ import org.dom4j.Text;
 import org.dom4j.io.SAXReader;
 import org.dom4j.tree.DefaultText;
 import org.mvel2.MVEL;
+import org.nuxeo.common.utils.ZipUtils;
 import org.nuxeo.ecm.core.api.Blob;
+import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.core.api.impl.blob.FileBlob;
 import org.nuxeo.ecm.core.api.impl.blob.StringBlob;
 import org.nuxeo.ecm.core.api.model.Property;
 import org.nuxeo.ecm.core.api.model.impl.primitives.BlobProperty;
 import org.nuxeo.ecm.core.schema.types.ListType;
 
+/**
+ *
+ * @author <a href="mailto:tdelprat@nuxeo.com">Tiry</a>
+ *
+ */
 public class ImporterServiceImpl {
 
     private static final String MSG_NO_ELEMENT_FOUND = "**CREATION**\nNo element \"%s\" found in %s, use the DOC_TYPE-INDEX value";
@@ -108,13 +116,32 @@ public class ImporterServiceImpl {
         return result;
     }
 
+    protected File workingDirectory;
+
     public List<DocumentModel> parse(InputStream is) throws Exception {
         Document doc = new SAXReader().read(is);
+        workingDirectory = null;
         return parse(doc);
     }
 
     public List<DocumentModel> parse(File file) throws Exception {
-        Document doc = new SAXReader().read(file);
+
+        Document doc= null;
+        try {
+            doc = new SAXReader().read(file);
+            workingDirectory = file.getParentFile();
+        } catch (Exception e) {
+            File tmp = new File(System.getProperty("java.io.tmpdir"));
+            File directory = new File(tmp, file.getName()+ System.currentTimeMillis());
+            directory.mkdir();
+            ZipUtils.unzip(file, directory);
+            for (File child : directory.listFiles()) {
+                if (child.getName().endsWith(".xml")) {
+                    return parse(child);
+                }
+            }
+            throw new ClientException("Can not find XML file inside the zip archive");
+        }
         return parse(doc);
     }
 
@@ -144,7 +171,17 @@ public class ImporterServiceImpl {
                 el, conf);
 
         if (propValues.containsKey("content")) {
-            StringBlob blob = new StringBlob((String) propValues.get("content"));
+            Blob  blob = null;
+            String content = (String) propValues.get("content");
+            if (content!=null &&  workingDirectory!=null) {
+                File file = new File(workingDirectory, content.trim());
+                if (file.exists())  {
+                    blob = new FileBlob(file);
+                }
+            }
+            if (blob==null) {
+                blob = new StringBlob((String) propValues.get("content"));
+            }
             if (propValues.containsKey("mimetype")) {
                 blob.setMimeType((String) propValues.get("mimetype"));
             }

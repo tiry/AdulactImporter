@@ -11,10 +11,6 @@
  - `session` : CoreSession
  - `Fn` : utility functions
 
-## TODO
-
- - manage real Blobs
- 
 
 
 

@@ -7,6 +7,13 @@ import org.nuxeo.common.xmap.annotation.XNode;
 import org.nuxeo.common.xmap.annotation.XNodeMap;
 import org.nuxeo.common.xmap.annotation.XObject;
 
+/**
+ * Descriptor that can be used to define how Nuxeo DocumentModel properties are
+ * filled from the input XML
+ *
+ * @author <a href="mailto:tdelprat@nuxeo.com">Tiry</a>
+ *
+ */
 @XObject("attributeConfig")
 public class AttributeConfig {
 

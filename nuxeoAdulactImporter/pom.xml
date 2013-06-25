@@ -44,8 +44,8 @@
       <artifactId>dom4j</artifactId>
     </dependency>
     <dependency>
-        <groupId>jaxen</groupId>
-        <artifactId>jaxen</artifactId>
+      <groupId>jaxen</groupId>
+      <artifactId>jaxen</artifactId>
     </dependency>
     <dependency>
       <groupId>org.mvel</groupId>
@@ -70,6 +70,14 @@
       <groupId>org.nuxeo.runtime</groupId>
       <artifactId>nuxeo-runtime-test</artifactId>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.nuxeo.ecm.automation</groupId>
+      <artifactId>nuxeo-automation-core</artifactId>
     </dependency>
   </dependencies>
   <build>
