@@ -59,6 +59,7 @@ public class ImporterServiceImpl {
         mvelCtx.put("root", rootDoc);
         mvelCtx.put("docs", docsStack);
         mvelCtx.put("session", session);
+
         this.registry = registry;
     }
 
@@ -230,6 +231,7 @@ public class ImporterServiceImpl {
     protected Map<String, Object> getMVELContext(Element el) {
         mvelCtx.put("currentDocument", docsStack.peek());
         mvelCtx.put("currentElement", el);
+        mvelCtx.put("Fn", new ImporterFunction(session, docsStack, elToDoc, el));
         return mvelCtx;
     }
 
