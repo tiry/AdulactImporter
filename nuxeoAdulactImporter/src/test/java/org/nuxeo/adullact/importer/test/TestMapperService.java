@@ -50,14 +50,17 @@ public class TestMapperService {
         session.save();
 
         List<DocumentModel> docs = session.query("select * from Workspace");
-        Assert.assertEquals("we should have only one Seance", 1, docs.size());
+        Assert.assertEquals("we should have only one Seance and one ", 1, docs.size());
         DocumentModel seanceDoc  = docs.get(0);
 
         docs = session.query("select * from Document where ecm:primaryType='Folder'");
         Assert.assertEquals("we should have 4 actes",4, docs.size());
 
         docs = session.query("select * from Document where ecm:primaryType='File'");
-        Assert.assertEquals("we should have 13 files",13, docs.size());
+        Assert.assertEquals("we should have 12 files",12, docs.size());
+
+        docs = session.query("select * from Document where ecm:primaryType='Section'");
+        Assert.assertEquals("we should have 1 Section",1, docs.size());
 
         docs = session.query("select * from Document where ecm:primaryType='Folder' AND ecm:parentId='" + seanceDoc.getId() + "'");
         Assert.assertEquals("we should have 3 actes in the seance",3, docs.size());
@@ -65,7 +68,7 @@ public class TestMapperService {
         docs = session.query("select * from Document where ecm:primaryType='Folder'  AND ecm:parentId!='" + seanceDoc.getId() + "'");
         Assert.assertEquals("we should have only 1 actes outside of the seance",1, docs.size());
 
-        docs = session.query("select * from Document where ecm:primaryType='File'  AND ecm:parentId='" + seanceDoc.getId() + "'");
+        docs = session.query("select * from Document where ecm:primaryType in ('File', 'Section')  AND ecm:parentId='" + seanceDoc.getId() + "'");
         Assert.assertEquals("we should have only 4 files in the seance",4, docs.size());
 
         docs = session.query("select * from Document order by ecm:path");

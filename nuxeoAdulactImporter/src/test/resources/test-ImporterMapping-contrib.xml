@@ -23,11 +23,18 @@
     </parent>
   </docConfig>
 
-  <docConfig tagName="document">
+  <docConfig tagName="//document[@type='convocation']">
+    <docType>Section</docType>
+    <name>@nom</name>
+    <parent>..</parent>
+  </docConfig>
+
+  <docConfig tagName="//document[@type!='convocation']">
     <docType>File</docType>
     <name>@nom</name>
     <parent>..</parent>
   </docConfig>
+
 
  </extension>
 

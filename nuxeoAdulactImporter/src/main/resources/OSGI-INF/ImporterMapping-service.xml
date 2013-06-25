@@ -12,7 +12,7 @@
 
       The mapping is defined by :
       <ul>
-        <li>tagName attribute : name of the target tag to select in the input XMLdocument</li>
+        <li>tagName attribute : name of the target tag to select in the input XMLdocument (could also be an Xpath expression)</li>
         <li>docType subtag : text node should contain the doctype that should be created</li>
         <li>name subtag : text node should contain an expression giving the name of the document to create</li>
         <li>parent subtag : text node should contain an expression giving the parent of the document to create</li>
@@ -46,7 +46,7 @@
 
       The mapping is defined by :
       <ul>
-        <li>tagName attribute : name of the target tag to select in the input XMLdocument</li>
+        <li>tagName attribute : name of the target tag to select in the input XMLdocument (could also be an Xpath expression)</li>
         <li>docProperty attribute : xpath of the target Nuxeo property</li>
         <li>xmlPath attribute : expression to extract the value from the XML input Document</li>
         <li>mapping ssubTag : expression to extract the value from the XML input Document, used in for complex types that need multiple mappings</li>

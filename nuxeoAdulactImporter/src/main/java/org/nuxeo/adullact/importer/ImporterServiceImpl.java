@@ -58,6 +58,7 @@ public class ImporterServiceImpl {
         docsStack.add(rootDoc);
         mvelCtx.put("root", rootDoc);
         mvelCtx.put("docs", docsStack);
+        mvelCtx.put("session", session);
         this.registry = registry;
     }
 
@@ -65,23 +66,42 @@ public class ImporterServiceImpl {
         return registry;
     }
 
-    protected DocConfig getDocCreationConfig(String tagName) {
+    protected DocConfig getDocCreationConfig(Element el) {
 
         for (DocConfig conf : getRegistry().getDocCreationConfigs()) {
-            if (conf.getTagName().equals(tagName)) {
+            // direct tagName match
+            if (conf.getTagName().equals(el.getName())) {
                 return conf;
+            } else {
+                // try xpath match
+                try {
+                    if (el.matches(conf.getTagName())) {
+                        return conf;
+                    }
+                } catch (Exception e) {
+                    // NOP
+                }
             }
         }
         return null;
     }
 
-    protected List<AttributeConfig> getAttributConfigs(String tagName) {
+    protected List<AttributeConfig> getAttributConfigs(Element el) {
 
         List<AttributeConfig> result = new ArrayList<AttributeConfig>();
 
         for (AttributeConfig conf : getRegistry().getAttributConfigs()) {
-            if (conf.getTagName().equals(tagName)) {
+            if (conf.getTagName().equals(el.getName())) {
                 result.add(conf);
+            } else {
+             // try xpath match
+                try {
+                    if (el.matches(conf.getTagName())) {
+                        result.add(conf);
+                    }
+                } catch (Exception e) {
+                    // NOP
+                }
             }
         }
         return result;
@@ -371,11 +391,11 @@ public class ImporterServiceImpl {
 
     protected void process(Element el) throws Exception {
 
-        DocConfig createConf = getDocCreationConfig(el.getName());
+        DocConfig createConf = getDocCreationConfig(el);
         if (createConf != null) {
             createNewDocument(el, createConf);
         }
-        List<AttributeConfig> configs = getAttributConfigs(el.getName());
+        List<AttributeConfig> configs = getAttributConfigs(el);
         if (configs != null) {
             for (AttributeConfig config : configs) {
                 processDocAttributes(docsStack.peek(), el, config);
