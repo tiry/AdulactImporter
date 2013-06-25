@@ -18,6 +18,7 @@
 package org.nuxeo.adullact.importer;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,6 +66,13 @@ public class ImporterComponent extends DefaultComponent implements XmlImporterSe
             throws Exception {
         ImporterServiceImpl importer = new ImporterServiceImpl(root,getRegistry());
         return importer.parse(xmlFile);
+    }
+
+    @Override
+    public List<DocumentModel> importDocuments(DocumentModel root, InputStream xmlStream)
+            throws Exception {
+        ImporterServiceImpl importer = new ImporterServiceImpl(root,getRegistry());
+        return importer.parse(xmlStream);
     }
 
 }

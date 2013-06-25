@@ -1,6 +1,7 @@
 package org.nuxeo.adullact.importer;
 
 import java.io.File;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -86,8 +87,17 @@ public class ImporterServiceImpl {
         return result;
     }
 
+    public List<DocumentModel> parse(InputStream is) throws Exception {
+        Document doc = new SAXReader().read(is);
+        return parse(doc);
+    }
+
     public List<DocumentModel> parse(File file) throws Exception {
         Document doc = new SAXReader().read(file);
+        return parse(doc);
+    }
+
+    public List<DocumentModel> parse(Document doc) throws Exception {
         Element root = doc.getRootElement();
         elToDoc = new HashMap<Element, DocumentModel>();
         mvelCtx.put("xml", doc);
