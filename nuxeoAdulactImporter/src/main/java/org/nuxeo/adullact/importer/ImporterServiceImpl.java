@@ -1,3 +1,21 @@
+/*
+ * (C) Copyright 2002-2013 Nuxeo SAS (http://nuxeo.com/) and contributors.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Lesser General Public License
+ * (LGPL) version 2.1 which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/lgpl.html
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * Contributors:
+ *     Nuxeo - initial API and implementation
+ *
+ */
+
 package org.nuxeo.adullact.importer;
 
 import java.io.File;
@@ -31,6 +49,7 @@ import org.nuxeo.ecm.core.api.model.impl.primitives.BlobProperty;
 import org.nuxeo.ecm.core.schema.types.ListType;
 
 /**
+ * Main implementation class for delivering the Import logic
  *
  * @author <a href="mailto:tdelprat@nuxeo.com">Tiry</a>
  *
@@ -103,7 +122,7 @@ public class ImporterServiceImpl {
             if (conf.getTagName().equals(el.getName())) {
                 result.add(conf);
             } else {
-             // try xpath match
+                // try xpath match
                 try {
                     if (el.matches(conf.getTagName())) {
                         result.add(conf);
@@ -126,13 +145,14 @@ public class ImporterServiceImpl {
 
     public List<DocumentModel> parse(File file) throws Exception {
 
-        Document doc= null;
+        Document doc = null;
         try {
             doc = new SAXReader().read(file);
             workingDirectory = file.getParentFile();
         } catch (Exception e) {
             File tmp = new File(System.getProperty("java.io.tmpdir"));
-            File directory = new File(tmp, file.getName()+ System.currentTimeMillis());
+            File directory = new File(tmp, file.getName()
+                    + System.currentTimeMillis());
             directory.mkdir();
             ZipUtils.unzip(file, directory);
             for (File child : directory.listFiles()) {
@@ -140,7 +160,8 @@ public class ImporterServiceImpl {
                     return parse(child);
                 }
             }
-            throw new ClientException("Can not find XML file inside the zip archive");
+            throw new ClientException(
+                    "Can not find XML file inside the zip archive");
         }
         return parse(doc);
     }
@@ -171,15 +192,15 @@ public class ImporterServiceImpl {
                 el, conf);
 
         if (propValues.containsKey("content")) {
-            Blob  blob = null;
+            Blob blob = null;
             String content = (String) propValues.get("content");
-            if (content!=null &&  workingDirectory!=null) {
+            if (content != null && workingDirectory != null) {
                 File file = new File(workingDirectory, content.trim());
-                if (file.exists())  {
+                if (file.exists()) {
                     blob = new FileBlob(file);
                 }
             }
-            if (blob==null) {
+            if (blob == null) {
                 blob = new StringBlob((String) propValues.get("content"));
             }
             if (propValues.containsKey("mimetype")) {
@@ -213,21 +234,19 @@ public class ImporterServiceImpl {
                 Object value = resolveBlob(el, conf);
                 if (log.isDebugEnabled()) {
                     log.debug(String.format(MSG_UPDATE_PROPERTY,
-                            targetDocProperty, el.getUniquePath(),
-                            value, conf.toString()));
+                            targetDocProperty, el.getUniquePath(), value,
+                            conf.toString()));
                 }
                 property.setValue(value);
             } else {
                 Object value = resolveComplex(el, conf);
                 if (log.isDebugEnabled()) {
                     log.debug(String.format(MSG_UPDATE_PROPERTY,
-                            targetDocProperty, el.getUniquePath(),
-                            value, conf.toString()));
+                            targetDocProperty, el.getUniquePath(), value,
+                            conf.toString()));
                 }
                 property.setValue(value);
             }
-
-
 
         } else if (property.isList()) {
 
@@ -247,8 +266,8 @@ public class ImporterServiceImpl {
                         el, conf.getSingleXpath());
                 if (log.isDebugEnabled()) {
                     log.debug(String.format(MSG_UPDATE_PROPERTY,
-                            targetDocProperty, el.getUniquePath(),
-                            value, conf.toString()));
+                            targetDocProperty, el.getUniquePath(), value,
+                            conf.toString()));
                 }
                 values.add(value);
 
@@ -256,8 +275,8 @@ public class ImporterServiceImpl {
                 Serializable value = (Serializable) resolveComplex(el, conf);
                 if (log.isDebugEnabled()) {
                     log.debug(String.format(MSG_UPDATE_PROPERTY,
-                            targetDocProperty, el.getUniquePath(),
-                            value, conf.toString()));
+                            targetDocProperty, el.getUniquePath(), value,
+                            conf.toString()));
                 }
                 values.add(value);
 
@@ -333,7 +352,6 @@ public class ImporterServiceImpl {
         }
         return null;
     }
-
 
     protected String resolvePath(Element el, String xpr) {
         Object ob = resolve(el, xpr);

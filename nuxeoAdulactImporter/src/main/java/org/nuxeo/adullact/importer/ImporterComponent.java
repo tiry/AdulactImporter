@@ -1,5 +1,5 @@
 /*
- * (C) Copyright ${year} Nuxeo SA (http://nuxeo.com/) and contributors.
+ * (C) Copyright 2002-2013 Nuxeo SAS (http://nuxeo.com/) and contributors.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser General Public License
@@ -12,7 +12,8 @@
  * Lesser General Public License for more details.
  *
  * Contributors:
- *     <a href="mailto:tdelprat@nuxeo.com">Tiry</a>
+ *     Nuxeo - initial API and implementation
+ *
  */
 
 package org.nuxeo.adullact.importer;
@@ -27,9 +28,13 @@ import org.nuxeo.runtime.model.ComponentInstance;
 import org.nuxeo.runtime.model.DefaultComponent;
 
 /**
+ * Main Nuxeo Runtime component managing extension points and exposing
+ * {@link XmlImporterSevice}
+ *
  * @author <a href="mailto:tdelprat@nuxeo.com">Tiry</a>
  */
-public class ImporterComponent extends DefaultComponent implements XmlImporterSevice {
+public class ImporterComponent extends DefaultComponent implements
+        XmlImporterSevice {
 
     protected List<DocConfig> docConfigs = new ArrayList<DocConfig>();
 
@@ -40,9 +45,9 @@ public class ImporterComponent extends DefaultComponent implements XmlImporterSe
             String extensionPoint, ComponentInstance contributor)
             throws Exception {
         if ("documentMapping".equals(extensionPoint)) {
-            docConfigs.add((DocConfig)contribution);
+            docConfigs.add((DocConfig) contribution);
         } else if ("attributeMapping".equals(extensionPoint)) {
-            attributeConfigs.add((AttributeConfig)contribution);
+            attributeConfigs.add((AttributeConfig) contribution);
         }
     }
 
@@ -64,14 +69,16 @@ public class ImporterComponent extends DefaultComponent implements XmlImporterSe
     @Override
     public List<DocumentModel> importDocuments(DocumentModel root, File xmlFile)
             throws Exception {
-        ImporterServiceImpl importer = new ImporterServiceImpl(root,getRegistry());
+        ImporterServiceImpl importer = new ImporterServiceImpl(root,
+                getRegistry());
         return importer.parse(xmlFile);
     }
 
     @Override
-    public List<DocumentModel> importDocuments(DocumentModel root, InputStream xmlStream)
-            throws Exception {
-        ImporterServiceImpl importer = new ImporterServiceImpl(root,getRegistry());
+    public List<DocumentModel> importDocuments(DocumentModel root,
+            InputStream xmlStream) throws Exception {
+        ImporterServiceImpl importer = new ImporterServiceImpl(root,
+                getRegistry());
         return importer.parse(xmlStream);
     }
 
